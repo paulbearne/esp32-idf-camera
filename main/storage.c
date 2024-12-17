@@ -22,41 +22,51 @@ bool filesystem = false;
 filesystem_type_t fstype;
 setting_t conf;
 
-
+       
+      
+     
+       
+       //"\"xclk\" conf.xclk);
+ 
+       
+       
+      
+       
 
 void setDefaults(void)
 {
-    conf.framesize = FRAMESIZE_QVGA;
-    conf.quality = 12;
-    conf.aec2 = 0;
-    conf.aecvalue = 300;
-    conf.aelevel = 0;
-    conf.agcgain = 1;
-    conf.awbgain = 1;
-    conf.bpc  = 1;
-    conf.brightness = 0;
-    conf.colorbar = 0;
-    conf.contrast = 0;
-    conf.dcw = 1;
-    conf.exposurectl = 0;
-    conf.gainceiling = (gainceiling_t)0;
-    conf.gainctl = 0;
-    conf.hmirror = 0;
-    conf.lenc = 1;
-    conf.rawgma = 1;
-    conf.saturation = 0;
-    conf.specialeffect = 0;
-    conf.vflip = 0;
-    conf.wbmode = 0;
-    conf.whitebalance = 0;
-    conf.wpc = 1;
-    conf.usews2812 = true;
-    conf.autolamp = false;
-    conf.xclk = XCLOCK_FREQ / 1000000;
-    conf.lamppin = 48;
-    conf.lampval = 0; // fully off
-    conf.minFrameTime = 200;  //
-    conf.checksum = sizeof(conf);
+    conf.autolamp = false;                     //"\"autolamp\" : autolamp true triggers flash while photo taken
+    conf.lampval = 0;                          //"\"lamp\" conf.lampval  0 off 255 fullt on
+    conf.usews2812 = true;                     //"\"lampws2812\" : usews2812 true uses ws2812 driver
+    conf.lamppin = LAMP_PIN;                   // pin used for led lamp
+    conf.framesize = FRAMESIZE_QVGA;           //"\"framesize\" : camsensor->status.framesize
+    conf.quality = 12;                         //"\"quality\" : camsensor->status.quality lower is better quality
+    conf.xclk = XCLOCK_FREQ / 1000000;         // not used at present need to debug
+    conf.brightness = 0;                       //"\"brightness\" : camsensor->status.brightness
+    conf.contrast = 0;                         //"\"contrast\" : camsensor->status.contrast
+    conf.saturation = 0;                       //"\"saturation\"  : camsensor->status.saturation
+    conf.sharpness = 0;                        //"\"sharpness\" : camsensor->status.sharpness
+    conf.specialeffect = 0;                    //"\"special_effect  : camsensor->status.special_effect 
+    conf.wbmode = 0;                           //"\"wb_mode\":%u,",  : camsensor->status.wb_mode);
+    conf.awb = 1;                              //"\"awb\" : camsensor->status.awb
+    conf.awbgain = 1;                          //"\"awb_gain\" : camsensor->status.awb_gain
+    conf.aec = 1;                              //"\"aec\" : camsensor->status.aec
+    conf.aec2 = 0;                             //"\"aec2\" : camsensor->status.aec2
+    conf.aelevel = 0;                          //"\"ae_level\" : camsensor->status.ae_level
+    conf.aecvalue = 300;                       //"\"aec_value\" : camsensor->status.aec_value
+    conf.agc = 1;                              //"\"agc\" : camsensor->status.agc
+    conf.agcgain = 1;                          //"\"agc_gain\" : camsensor->status.agc_gain
+    conf.gainceiling = (gainceiling_t)0;       //"\"gainceiling\" : camsensor->status.gainceiling
+    conf.bpc  = 1;                             //"\"bpc\" : camsensor->status.bpc
+    conf.wpc = 1;                              //"\"wpc\" : camsensor->wpc 
+    conf.rawgma = 1;                           //"\"raw_gma\" : camsensor->status.raw_gma
+    conf.lenc = 1;                             //"\"lenc\" : camsensor->status.lenc
+    conf.vflip = 0;                            //"\"vflip\" : camsensor->status.vflip
+    conf.hmirror = 0;                          //"\"hmirror\" : camsensor->status.hmirror
+    conf.dcw = 1;                              //"\"dcw\" : camsensor->status.dcw
+    conf.colorbar = 0;                         //"\"colorbar\" : camsensor->status.colorbar
+    conf.minFrameTime = 0;                     // setd the minimum frame delay 0 disabled
+    conf.checksum = sizeof(conf);              // size of this structure used to set defaults if this struct changed
 }
 
 esp_err_t initSD(const char *base_path)
@@ -397,9 +407,8 @@ void printConfig(void){
     ESP_LOGI(TAG,"color bar on : %s",conf.colorbar ? "true" : "false");
     ESP_LOGI(TAG,"contrast : %d",conf.contrast);
     ESP_LOGI(TAG,"dcw : %d",conf.dcw);
-    ESP_LOGI(TAG,"exposure : %d",conf.exposurectl);
     ESP_LOGI(TAG,"gain ceiling : %d",conf.gainceiling);
-    ESP_LOGI(TAG,"gain control : %d",conf.gainctl);
+    ESP_LOGI(TAG,"gain control : %d",conf.aec);
     ESP_LOGI(TAG,"h mirror : %d",conf.hmirror);
     ESP_LOGI(TAG,"lenc : %d",conf.lenc);
     ESP_LOGI(TAG,"raw gma : %d",conf.rawgma);
@@ -407,11 +416,12 @@ void printConfig(void){
     ESP_LOGI(TAG,"frame size : %d",conf.specialeffect);
     ESP_LOGI(TAG,"v flip: %d",conf.vflip);
     ESP_LOGI(TAG,"wb mode : %d",conf.wbmode);
-    ESP_LOGI(TAG,"white balance : %d",conf.whitebalance);
+    ESP_LOGI(TAG,"white balance : %d",conf.awb);
     ESP_LOGI(TAG,"wpc : %d",conf.wpc);
     ESP_LOGI(TAG,"is ws2812 : %s",conf.usews2812 ? "true":"false");
     ESP_LOGI(TAG,"auto lamp : %s", conf.autolamp  ? "true":"false");
     ESP_LOGI(TAG,"lamp pin : %d",(int)conf.lamppin);
     ESP_LOGI(TAG,"lamp value : %d",conf.lampval); // fully on
+    ESP_LOGI(TAG,"Frame duration limit %d",(int)conf.minFrameTime);
     ESP_LOGI(TAG,"checksum : %u",(unsigned int)conf.checksum);
 }

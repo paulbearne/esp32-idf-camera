@@ -2,7 +2,7 @@ idf_component_register(SRCS
     "storage.c" 
     "wificonnect.c" 
     "psramutils.c"
-    "camstream.c"
+    "server.c"
     "main.c"
     "cameratask.c"
     "lamp.c"

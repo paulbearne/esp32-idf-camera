@@ -183,13 +183,13 @@ void startCamera()
         camsensor->set_saturation(camsensor, conf.saturation);
         camsensor->set_special_effect(camsensor, conf.specialeffect);
         camsensor->set_wb_mode(camsensor, conf.wbmode);
-        camsensor->set_whitebal(camsensor, conf.whitebalance);
+        camsensor->set_whitebal(camsensor, conf.awb);
         camsensor->set_awb_gain(camsensor, conf.awbgain);
-        camsensor->set_exposure_ctrl(camsensor, conf.exposurectl);
+        camsensor->set_exposure_ctrl(camsensor, conf.aec);
         camsensor->set_aec2(camsensor, conf.aec2);
         camsensor->set_ae_level(camsensor, conf.aelevel);
         camsensor->set_aec_value(camsensor, conf.aecvalue);
-        camsensor->set_gain_ctrl(camsensor, conf.gainctl);
+        camsensor->set_gain_ctrl(camsensor, conf.agc);
         camsensor->set_agc_gain(camsensor, conf.agcgain);
         camsensor->set_gainceiling(camsensor, conf.gainceiling);
         camsensor->set_bpc(camsensor, conf.bpc);

@@ -16,4 +16,13 @@ currently tested on a esp32-s3 camera board which has psram and use N16R8 esp32
 application specific settings are in the sdconfig file which can be modified in the vscode extension
 sdkconfig editior.
 
+you also need to PSram to the type used on your board on in sdkconfig
+also check 
+Initialize SPI RAM during startup
+Ignore PSRAM when not found
+checkboxes
+
+freertos
+and check that freertos is only runnung on core 1
+
 

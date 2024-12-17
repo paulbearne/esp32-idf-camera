@@ -148,9 +148,9 @@ void cam_streamer_task(void *p)
         }
 
         current_time = esp_timer_get_time();
-        if ((current_time - last_time) < s->frame_delay)
-            vTaskDelay((s->frame_delay - (current_time - last_time)) / (pdMS_TO_TICKS(1000)));
-
+        if ((current_time - last_time) < s->frame_delay){
+            vTaskDelay((s->frame_delay-(current_time-last_time))/(1000*portTICK_PERIOD_MS));
+        }
         cam_streamer_update_frame(s);
 
         //    ESP_LOGI(TAG, "[cam_streamer] frame_size: %luB %lums\n", (long unsigned int)s->buf->len, (long unsigned int)((current_time - last_time) / 1000));
@@ -449,7 +449,7 @@ static esp_err_t cmd_handler(httpd_req_t *req)
     else if (strcmp(variable, "awb") == 0)
     {
         res = s->set_whitebal(s, val);
-        conf.whitebalance = val;
+        conf.awb = val;
     }
     else if (strcmp(variable, "agc") == 0)
     {
@@ -459,7 +459,7 @@ static esp_err_t cmd_handler(httpd_req_t *req)
     else if (strcmp(variable, "aec") == 0)
     {
         res = s->set_exposure_ctrl(s, val);
-        conf.exposurectl = val;
+        conf.aec = val;
     }
     else if (strcmp(variable, "hmirror") == 0)
     {
@@ -710,6 +710,9 @@ static esp_err_t set_content_type_from_file(httpd_req_t *req, const char *filena
     else if (IS_FILE_EXT(filename, ".svg"))
     {
         return httpd_resp_set_type(req, "image/svg+xml");
+    }
+    else if (IS_FILE_EXT(filename,".css")){
+        return httpd_resp_set_type(req,"text/css");
     }
     /* This is a limited set only */
     /* For any other type always set as plain text */

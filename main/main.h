@@ -66,12 +66,17 @@ extern "C"
 {
 #endif
 
-#define LED_PIN GPIO_NUM_2
+// s3 has 2 leds normal on pin 2 and wa2812 on pin48
+#define LED_1_PIN GPIO_NUM_2
 #define USE_WS2812 // Use WS2812 rgb led
 
+
 #ifdef USE_WS2812
-#define LED_GPIO_NUM 48
+#define LED_2_PIN GPIO_NUM_48
 #endif
+
+//#define LAMP_PIN LED_1_PIN
+#define LAMP_PIN LED_2_PIN
 
 #define APP_CPU 1
 #define PRO_CPU 0
@@ -84,6 +89,7 @@ extern "C"
 #define PREFERENCES_MAX_SIZE 500
 #define PREFERENCES_FILE "beyblades.cfg"
 
+//#define LAMP_PIN 48
 
 #ifdef CONFIG_XCLOCK_10000000
 #define XCLOCK_FREQ 10000000
@@ -108,38 +114,39 @@ extern "C"
 
     typedef struct
     {
-        framesize_t framesize;     // FRAMESIZE_[QQVGA|HQVGA|QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA|QXGA(ov3660)]);
-        uint8_t quality;           // 10 to 63
-        int8_t brightness;         // -2 to 2
-        int8_t contrast;           // -2 to 2
-        int8_t saturation;         // -2 to 2
-        uint8_t specialeffect;     // 0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia
-        uint8_t whitebalance;      // 0 = disable , 1 = enable
-        uint8_t awbgain;           // 0 = disable , 1 = enable
-        uint8_t wbmode;            // 0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home
-        uint8_t exposurectl;       // 0 = disable , 1 = enable
-        uint8_t aec2;              // 0 = disable , 1 = enable
-        int8_t aelevel;            // -2 to 2
-        uint16_t aecvalue;         // 0 to 1200
-        uint8_t gainctl;           // 0 = disable , 1 = enable
-        uint8_t agcgain;           // 0 to 30
-        gainceiling_t gainceiling; // 0 to 6
-        uint8_t bpc;               // 0 = disable , 1 = enable
-        uint8_t wpc;               // 0 = disable , 1 = enable
-        uint8_t rawgma;            // 0 = disable , 1 = enable
-        uint8_t lenc;              // 0 = disable , 1 = enable
-        uint8_t hmirror;           // 0 = disable , 1 = enable
-        uint8_t vflip;             // 0 = disable , 1 = enable
-        uint8_t dcw;               // 0 = disable , 1 = enable
-        uint8_t colorbar;          // 0 = disable , 1 = enable
+        bool autolamp;             //"\"autolamp\" : autolamp
+        int lampval;               //"\"lamp\" : lampval
+        bool usews2812;            //"\"lampws2812\" : usews2812 true uses ws2812 driver
+        uint32_t lamppin;          // pin used for led lamp
+        framesize_t framesize;     //"\"framesize\" : camsensor->status.framesize
+        uint8_t quality;           //"\"quality\" : camsensor->status.quality
         uint32_t xclk;
-        uint8_t camRotation;
-        bool autolamp;
-        int lampval;               // -1 if lamp disabled
-        bool usews2812;
-        uint32_t lamppin;
-        uint32_t minFrameTime;
-        uint32_t checksum; // simple xor checksum
+        int8_t brightness;         //"\"brightness\" : camsensor->status.brightness
+        int8_t contrast;           //"\"contrast\" : camsensor->status.contrast);
+        int8_t saturation;         //"\"saturation\"  : camsensor->status.saturation
+        uint8_t specialeffect;     //"\"special_effect  : camsensor->status.special_effect 0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia
+        int8_t sharpness;          //"\"sharpness\" : camsensor->status.sharpness
+        uint8_t wbmode;            //"\"wb_mode\" : camsensor->status.wb_mode
+        uint8_t awb;               //"\"awb\" : camsensor->status.awb
+        uint8_t awbgain;           //"\"awb_gain\" : camsensor->status.awb_gain
+        uint8_t aec;               //"\"aec\" : camsensor->status.aec 
+        uint8_t aec2;              //"\"aec2\" : camsensor->status.aec2
+        int8_t aelevel;            //"\"ae_level\" : camsensor->status.ae_level
+        uint16_t aecvalue;         //"\"aec_value\" : camsensor->status.aec_value
+        uint8_t agc;               //"\"agc\" : camsensor->status.agc
+        uint8_t agcgain;           //"\"agc_gain\" : camsensor->status.agc_gain  
+        gainceiling_t gainceiling; //"\"gainceiling\" : camsensor->status.gainceiling
+        uint8_t bpc;               //"\"bpc\" : camsensor->status.bpc
+        uint8_t wpc;               //"\"wpc\" : camsensor->status.wpc
+        uint8_t rawgma;            //"\"raw_gma\" : camsensor->status.raw_gma
+        uint8_t lenc;              //"\"lenc\" : camsensor->status.lenc
+        uint8_t vflip;             //"\"vflip\" : camsensor->status.vflip
+        uint8_t hmirror;           //"\"hmirror\" : camsensor->status.hmirror
+        uint8_t dcw;               //"\"dcw\" : camsensor->status.dcw
+        uint8_t colorbar;          //"\"colorbar\" : camsensor->status.colorbar
+        uint8_t camRotation;       //"\"rotate\" : CONFIG_CAMERA_ROTATION
+        uint32_t minFrameTime;     // setd the minimum frame delay 
+        uint32_t checksum;         // size of this structure used to set defaults if this struct changed
 
     } setting_t;
 
@@ -206,6 +213,7 @@ extern "C"
     void loadConfig(filesystem_type_t fstype);
     void deleteConfig(filesystem_type_t fstype);
     void printConfig(void);
+
     esp_err_t initRgbLed(void);
     esp_err_t setRgbLedLevel(uint8_t level);
     esp_err_t rmt_new_led_strip_encoder(const led_strip_encoder_config_t *config, rmt_encoder_handle_t *ret_encoder);
