@@ -1,0 +1,360 @@
+menu "Application Configuration"
+    menu "Application Settings"
+        config APP_NAME
+            string "application name"
+            default "ESP32-CAM"
+            help
+                application name
+                
+        config APP_VER
+            string "application version"
+            default "V1.0.0"
+            help
+                application name       
+    endmenu
+    menu "Server Configuration"
+    config MAX_ASYNC_REQUESTS
+        int "Max Simultaneous Requests"
+        default 5
+        help
+            The maximum number of simultaneous async requests that the
+            web server can handle.
+
+    config SERVER_TASK_STACK_SIZE
+        int "Task Stack Size"
+        default 4096
+        help
+            size of the server task stack
+    endmenu
+   
+    menu "Camera settings"
+            comment "Camera Board"
+            choice BOARD
+                bool "Select Board"
+                default BOARD_CAMERA_MODEL_S3
+                help
+                    Select Board Type.
+    
+                config BOARD_WROVER_KIT
+                    bool "Freenove ESP32-WROVER CAM Board"
+                config BOARD_CAMERA_MODEL_ESP_EYE
+                    bool "Espressif ESP-EYE"
+                config BOARD_ESP32CAM_AITHINKER
+                    bool "AiThinker ESP32-CAM"
+                config BOARD_CAMERA_MODEL_TTGO_T_JOURNAL
+                    bool "TTGO T-Journal ESP32 Camera"
+                config BOARD_CAMERA_MODEL_S3
+                    bool "S3 Camera"
+            endchoice
+            config CAMERA_FPS
+                int "Frames per second"
+                default 10
+            help
+               camera frames per second
+
+            config CAMERA_QUALITY
+                int "Image Quality"
+                default 12
+                help 
+                    camera quality 0 - 63 lower is higher qaulity   
+            config CAMERA_ROTATION
+                    int "Camera Rotation"
+                    default 0
+                    help 
+                    camera rotation
+            config CAMERA_MIN_FRAME_TIME
+                    int "Camera minimum frame time"
+                    default 500
+                    help 
+                        camera minimum frame time      
+            comment "Camera Xclock frequency"
+            choice XCLK_FREQ
+                bool "Select Xclock frequency"
+                default XCLOCK_10000000
+                help
+                    select the cameras xclock frequency
+                config XCLOCK_10000000
+                    bool "XClock 10000000"
+                config XCLOCK_20000000
+                    bool "XClock 20000000"   
+            endchoice
+            comment "Camera Frame size"
+                choice FRAME_SIZE
+                    bool "Select Frame Size"
+                    default FRAMESIZE_QVGA
+                    help
+                        Select Frame Size
+
+                    config FRAMESIZE_96X96
+                        bool "96 x 96"
+                    config FRAMESIZE_QQVGA
+                        bool "QQVGA 160 x 120"
+                    config FRAMESIZE_128X128
+                        bool "128 x 128"
+                    config FRAMESIZE_QCIF
+                        bool "QCIF 176 x 144"
+                    config FRAMESIZE_HQVGA 
+                        bool "HQVGA 240 x 176" 
+                    config FRAMESIZE_240X240
+                        bool "240 x 240"
+                    config FRAMESIZE_QVGA
+                        bool "QVGA 320 x 240"
+                    config FRAMESIZE_320X320
+                        bool "320 x 320"
+                    config FRAMESIZE_CIF
+                        bool "CIF 400 x 296"
+                    config FRAMESIZE_HVGA
+                        bool "HVGA 480 x 320"
+                    config FRAMESIZE_VGA
+                        bool "VGA 640 x 480"
+                    config FRAMESIZE_SVGA
+                        bool "SVGA 800 x 600"
+                    config FRAMESIZE_XGA
+                        bool "XGA 1024 x 768"
+                    config FRAMESIZE_HD
+                         bool "HD 1280 x 720"
+                    config FRAMESIZE_SXGA
+                        bool "SXGA 1280 x 1024"
+                    config FRAMESIZE_UXGA
+                        bool "UXGA 1600 x 1200"
+                endchoice        
+
+        endmenu
+        menu "WiFi Setting"
+            menu "SoftAP Configuration"
+                comment "SoftAP Configuration"
+        
+                config WIFI_AP_SSID
+                    string "Access point name"
+                    default "myssid"
+                    help
+                        SSID (network name) of the AP for the example to connect to.
+        
+                config WIFI_AP_PASSWORD
+                    string "Access point password"
+                    default "mypassword"
+                    help
+                        WiFi password of the AP for the example to use.
+        
+                config WIFI_AP_CHANNEL
+                    int "Access point channel"
+                    range 1 14
+                    default 1
+                    help
+                        WiFi channel (network channel) of the AP for the example to use.
+        
+                config MAX_STA_CONN_AP
+                    int "Maximum station connections"
+                    default 4
+                    help
+                        Max number of the station connections to AP.
+            endmenu
+            menu "STA Configuration"
+                config STA_WIFI_SSID
+                    string "WiFi SSID"
+                    default "myssid"
+                    help
+                        SSID (network name) to connect to.
+    
+                config STA_WIFI_PASSWORD
+                    string "WiFi Password"
+                    default "mypassword"
+                    help
+                        WiFi password (WPA or WPA2) to connect to.
+    
+                config STA_MAXIMUM_RETRY
+                    int "Maximum retry"
+                    default 5
+                    help
+                        Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+               
+                choice STA_WIFI_SCAN_AUTH_MODE_THRESHOLD
+                    bool "select authentication"
+                    default STA_WIFI_AUTH_WPA2_PSK
+                    help
+                            The weakest authmode to accept in the scan mode.
+                            This value defaults to ESP_WIFI_AUTH_WPA2_PSK incase password is present
+                            and ESP_WIFI_AUTH_OPEN is used. Please select ESP_WIFI_AUTH_WEP / ESP_WIFI_AUTH_WPA_PSK
+                            incase AP is operating in WEP / WPA mode.
+                
+                    config STA_WIFI_AUTH_OPEN
+                            bool "OPEN"
+                    config STA_WIFI_AUTH_WEP
+                            bool "WEP"
+                    config STA_WIFI_AUTH_WPA_PSK
+                            bool "WPA PSK"
+                    config STA_WIFI_AUTH_WPA2_PSK
+                            bool "WPA2 PSK"
+                    config STA_WIFI_AUTH_WPA_WPA2_PSK
+                            bool "WPA/WPA2 PSK"
+                    config STA_WIFI_AUTH_WPA3_PSK
+                            bool "WPA3 PSK"
+                    config STA_WIFI_AUTH_WPA2_WPA3_PSK
+                            bool "WPA2/WPA3 PSK"
+                    config STA_WIFI_AUTH_WAPI_PSK
+                            bool "WAPI PSK"
+                endchoice
+    
+            endmenu
+        endmenu
+        menu "Mdns Settings"
+    
+            orsource "$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps"
+        
+            config MDNS_HOSTNAME
+                string "mDNS Hostname"
+                default "esp32-mdns"
+                help
+                    mDNS Hostname for example to use
+        
+            config MDNS_INSTANCE
+                string "mDNS Instance Name"
+                default "ESP32 with mDNS"
+                help
+                    mDNS Instance Name for example to use
+        
+            config MDNS_PUBLISH_DELEGATE_HOST
+                bool "Publish a delegated host"
+                help
+                    Enable publishing a delegated host other than ESP32.
+                    The example will also add a mock service for this host.
+        
+            config MDNS_RESOLVE_TEST_SERVICES
+                bool "Resolve test services"
+                default n
+                help
+                    Enable resolving test services on startup.
+                    These services are advertized and evaluated in automated tests.
+                    When executed locally, these will not be resolved and warnings appear in the log.
+                    Please set to false to disable initial querying to avoid warnings.
+        
+            config MDNS_ADD_MAC_TO_HOSTNAME
+                bool "Add mac suffix to hostname"
+                default n
+                help
+                    If enabled, a portion of MAC address is added to the hostname, this is used
+                    for evaluation of tests in CI
+        
+            
+            config MDNS_ADD_CUSTOM_NETIF
+                bool "Add user netif to mdns service"
+                default n
+                help
+                    If enabled, we try to add a custom netif to mdns service.
+                    Note that for using with common connection example code, we have to disable
+                    all predefined interfaces in mdns component setup (since we're adding one
+                    of the default interfaces)
+        
+        endmenu
+    
+        
+        menu "SDMMC CARD"
+    
+            config USE_SD_CARD
+                bool "Use SD card for file storage"
+                default n
+                help
+                    If this config item is set, the file you upload to server can be chosen to save in the SDcard.
+        
+            config FORMAT_IF_MOUNT_SDCARD_FAILED
+                bool "Format the card if mount failed"
+                default n
+                depends on USE_SD_CARD
+                help
+                    If this config item is set, the card will be formatted if mount has failed.
+        
+            config SD_USE_SDMMC_HOST
+                bool "Use SDMMC host"
+                default y
+                depends on USE_SD_CARD && SOC_SDMMC_HOST_SUPPORTED
+                help
+                    If this config item is set, SDMMC is used to mount the SDcard.
+                    Otherwise, will use SPI host to access and mount the SDcard.
+        
+            menu "SD card pin configuration (SPI)"
+                depends on USE_SD_CARD && !SD_USE_SDMMC_HOST
+        
+                config SD_SPI_PIN_MOSI
+                    int "MOSI GPIO number"
+                    default 15 if IDF_TARGET_ESP32
+                    default 35 if IDF_TARGET_ESP32S2
+                    default 35 if IDF_TARGET_ESP32S3
+                    default 4  # C3 and others
+        
+                config SD_SPI_PIN_MISO
+                    int "MISO GPIO number"
+                    default 2 if IDF_TARGET_ESP32
+                    default 37 if IDF_TARGET_ESP32S2
+                    default 37 if IDF_TARGET_ESP32S3
+                    default 6  # C3 and others
+        
+                config SD_SPI_PIN_CLK
+                    int "CLK GPIO number"
+                    default 14 if IDF_TARGET_ESP32
+                    default 36 if IDF_TARGET_ESP32S2
+                    default 36 if IDF_TARGET_ESP32S3
+                    default 5  # C3 and others
+        
+                config SD_SPI_PIN_CS
+                    int "CS GPIO number"
+                    default 13 if IDF_TARGET_ESP32
+                    default 34 if IDF_TARGET_ESP32S2
+                    default 34 if IDF_TARGET_ESP32S3
+                    default 1  # C3 and others
+        
+            endmenu
+        
+            choice SD_BUS_WIDTH
+                prompt "SD/MMC bus width"
+                default SD_BUS_WIDTH_4
+                help
+                    Select the bus width of SD or MMC interface.
+                    Note that even if 1 line mode is used, D3 pin of the SD card must have a pull-up resistor connected.
+                    Otherwise the card may enter SPI mode, the only way to recover from which is to cycle power to the card.
+        
+                config SD_BUS_WIDTH_4
+                    bool "4 lines (D0 - D3)"
+        
+                config SD_BUS_WIDTH_1
+                    bool "1 line (D0)"
+            endchoice
+            
+            menu "SD card pin configuration (SDMMC)"
+                depends on SD_USE_SDMMC_HOST && SOC_SDMMC_USE_GPIO_MATRIX
+        
+                config SD_PIN_CMD
+                    int "CMD GPIO number"
+                    default 38 if IDF_TARGET_ESP32S3
+                    default 1
+        
+                config SD_PIN_CLK
+                    int "CLK GPIO number"
+                    default 39 if IDF_TARGET_ESP32S3
+                    default 2
+        
+                config SD_PIN_D0
+                    int "D0 GPIO number"
+                    default 40 if IDF_TARGET_ESP32S3
+                    default 3
+                if SD_BUS_WIDTH_4
+                    config SD_PIN_D1
+                        int "D1 GPIO number"
+                        default 38 if IDF_TARGET_ESP32S3
+                        default 4
+        
+                    config SD_PIN_D2
+                        int "D2 GPIO number"
+                        default 33 if IDF_TARGET_ESP32S3
+                        default 5
+        
+                    config SD_PIN_D3
+                        int "D3 GPIO number"
+                        default 34 if IDF_TARGET_ESP32S3
+                        default 6
+                endif  # SDMMC_BUS_WIDTH_4
+        
+            endmenu
+        
+        endmenu    
+
+endmenu
