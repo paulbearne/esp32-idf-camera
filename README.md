@@ -11,8 +11,7 @@ idf.py add-dependency espressif/esp32-camera
 idf.py add-dependency espressif/mdns
 
 this is still a work in progress 
-currently tested on a esp32-s3 camera board
-and esp32-cam board
+currently tested on a esp32-s3 camera board which has psram and use N16R8 esp32
 
 application specific settings are in the sdconfig file which can be modified in the vscode extension
 sdkconfig editior.
